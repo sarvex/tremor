@@ -27,8 +27,8 @@ check_c_source_compiles(
     "#include <alloca.h>\nint main() { char* array = alloca(100); array[0] = 4; return array[0]; }"
     HAVE_ALLOCA
 )
-if(-DHAVE_ALLOCA)
-    add_definitions(HAVE_ALLOCA)
+if(HAVE_ALLOCA)
+    add_definitions(-DHAVE_ALLOCA)
 endif()
 
 check_c_source_compiles(
