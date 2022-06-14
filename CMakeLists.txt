@@ -22,13 +22,23 @@ if(NOT TARGET Ogg::ogg)
 endif()
 
 include(CheckCSourceCompiles)
+include(CheckSymbolExists)
+include(CheckIncludeFile)
 
-check_c_source_compiles(
-    "#include <alloca.h>\nint main() { char* array = alloca(100); array[0] = 4; return array[0]; }"
-    HAVE_ALLOCA
-)
-if(HAVE_ALLOCA)
+check_include_file(alloca.h HAVE_ALLOCA_H)
+if(HAVE_ALLOCA_H)
+    add_definitions(-DHAVE_ALLOCA_H)
+endif()
+
+if(WIN32)
+    check_symbol_exists(_alloca "malloc.h" HAVE_ALLOCA)
     add_definitions(-DHAVE_ALLOCA)
+else()
+    check_symbol_exists(alloca "alloca.h" HAVE_ALLOCA)
+    check_symbol_exists(alloca "stdlib.h" HAVE_ALLOCA)
+    if(HAVE_ALLOCA)
+        add_definitions(-DHAVE_ALLOCA)
+    endif()
 endif()
 
 check_c_source_compiles(
